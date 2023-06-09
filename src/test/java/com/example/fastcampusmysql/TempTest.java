@@ -3,7 +3,11 @@ package com.example.fastcampusmysql;
 import lombok.*;
 import org.junit.jupiter.api.Test;
 
-record Rectang(double length, double width){}
+record Rectang(
+        double length, double width
+){
+
+}
 
 @Getter
 @Builder
@@ -15,10 +19,12 @@ class tempClass{
 public class TempTest {
     @Test
     void recordClass_Test(){
+        System.out.println("---------------------");
         Rectang temp = new Rectang(12, 24);
-        System.out.println(">>>>>>>>> "+temp);
+        System.out.println(">>>>>>>>> " + temp);
         System.out.println(temp.length());
         System.out.println(temp.width());
+        System.out.println("---------------------");
     }
 
     @Test

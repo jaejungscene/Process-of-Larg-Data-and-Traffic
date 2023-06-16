@@ -39,4 +39,11 @@ public class TempTest {
 //        System.out.println(A.getName());
         System.out.println("------------------");
     }
+
+    @Test
+    void test01() {
+        System.out.println(">>> " + tempClass.class);
+        var sql = String.format("SELECT * FROM %s WHERE id = :id", "hello world");
+        System.out.println(sql);
+    }
 }

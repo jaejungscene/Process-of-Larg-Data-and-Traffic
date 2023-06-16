@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberWriteService {
     final private MemberRepository memberRepository;
-    public Member create(RegisterMemberCommand command) {
+    public Member register(RegisterMemberCommand command) {
         /**
          * Desc:
          *      register user's info(e-mail, nickname, birth)
@@ -22,7 +22,8 @@ public class MemberWriteService {
          * memberRepository.save(member)
          */
 
-        var member = Member.builder()
+        var member = Member
+                .builder()
                 .nickname(command.nickname())
                 .email(command.email())
                 .birthday(command.birthday())

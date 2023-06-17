@@ -21,17 +21,14 @@ import java.util.Optional;
 public class MemberRepository {
     final private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     static final private String TABLE = "Member";
-
-    private RowMapper<Member> memberRowMapper() {
-        return (ResultSet resultSet, int rowNum) -> Member
-                .builder()
-                .id(resultSet.getLong("id"))
-                .email(resultSet.getString("email"))
-                .nickname(resultSet.getString("nickname"))
-                .birthday(resultSet.getObject("birthday", LocalDate.class))
-                .createdAt(resultSet.getObject("createdAt", LocalDateTime.class))
-                .build();
-    }
+    RowMapper<Member> memberRowMapper = (ResultSet resultSet, int rowNum) -> Member
+            .builder()
+            .id(resultSet.getLong("id"))
+            .email(resultSet.getString("email"))
+            .nickname(resultSet.getString("nickname"))
+            .birthday(resultSet.getObject("birthday", LocalDate.class))
+            .createdAt(resultSet.getObject("createdAt", LocalDateTime.class))
+            .build();
 
     public Optional<Member> findById(Long id) {
         /**
@@ -40,13 +37,13 @@ public class MemberRepository {
          */
         var sql = String.format("SELECT * FROM %s WHERE id = :id", TABLE);
         var param = new MapSqlParameterSource().addValue("id", id);
-        var member = namedParameterJdbcTemplate.queryForObject(sql, param, memberRowMapper());
+        var member = namedParameterJdbcTemplate.queryForObject(sql, param, memberRowMapper);
         return Optional.ofNullable(member);
     }
 
-    public List<Member> getAllMembers() {
+    public List<Member> findAll() {
         var sql = String.format("SELECT * FROM %s", TABLE);
-        return namedParameterJdbcTemplate.query(sql, memberRowMapper());
+        return namedParameterJdbcTemplate.query(sql, memberRowMapper);
     }
 
     public Member save(Member member) {
@@ -80,6 +77,9 @@ public class MemberRepository {
 
     private Member update(Member member) {
         //TODO: implemented
+        var sql = String.format("UPDATE %s set email = :email, nickname = :nickname, birthday = :birthday WHERE id = :id", TABLE);
+        SqlParameterSource params = new BeanPropertySqlParameterSource(member);
+        namedParameterJdbcTemplate.update(sql, params);
         return member;
     }
 }

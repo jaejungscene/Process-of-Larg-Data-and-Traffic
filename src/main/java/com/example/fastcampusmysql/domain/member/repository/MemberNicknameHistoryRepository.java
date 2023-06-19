@@ -52,6 +52,7 @@ public class MemberNicknameHistoryRepository {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName(TABLE)
                 .usingGeneratedKeyColumns("id");
+
         SqlParameterSource params = new BeanPropertySqlParameterSource(history);
         var id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
@@ -62,6 +63,9 @@ public class MemberNicknameHistoryRepository {
                 .nickname(history.getNickname())
                 .createdAt(history.getCreatedAt())
                 .build();
+
+
+
     }
 
 

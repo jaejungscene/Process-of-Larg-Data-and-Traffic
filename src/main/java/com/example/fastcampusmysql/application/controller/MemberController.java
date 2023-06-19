@@ -1,4 +1,4 @@
-package com.example.fastcampusmysql.controller;
+package com.example.fastcampusmysql.application.controller;
 
 import com.example.fastcampusmysql.domain.member.dto.MemberDto;
 import com.example.fastcampusmysql.domain.member.dto.MemberNicknameHistoryDto;
@@ -30,6 +30,7 @@ public class MemberController {
     }
     @GetMapping("/members/{id}")
     public MemberDto getMember(@PathVariable Long id) {
+
         return memberReadService.getMember(id);
     }
     @PostMapping("members/{id}/name")

@@ -19,11 +19,12 @@ public class  CreateFollowMemberUsecase {
     public void execute(Long fromMemberId, Long toMemberId) {
         /**
          * 1. 입력받은 memberId로 회원조회
-         * 2. FOllowWriteService.create()
+         * 2. FollowWriteService.create()
          */
         var fromMember = memberReadService.getMember(fromMemberId);
         var toMember = memberReadService.getMember(toMemberId);
-        followWriteService.create(fromMember, toMember);
+        followWriteService.create(fromMember,
+                toMember);
     }
 
     public List<FollowDto> getAll() {

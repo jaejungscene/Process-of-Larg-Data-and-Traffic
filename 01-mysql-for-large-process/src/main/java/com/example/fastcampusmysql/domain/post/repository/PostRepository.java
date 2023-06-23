@@ -1,10 +1,13 @@
 package com.example.fastcampusmysql.domain.post.repository;
 
+import com.example.fastcampusmysql.domain.post.dto.DailyPostCount;
+import com.example.fastcampusmysql.domain.post.dto.DailyPostCountRequest;
 import com.example.fastcampusmysql.domain.post.entity.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -20,7 +23,8 @@ import java.util.List;
 public class PostRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     static final private String TABLE = "Post";
-    static final private RowMapper<Post> ROW_MAPPER = (ResultSet resultSet, int rowNum) -> Post
+
+    static final private RowMapper<Post> POST_ROW_MAPPER = (ResultSet resultSet, int rowNum) -> Post
             .builder()
             .id(resultSet.getLong("id"))
             .memberId(resultSet.getLong("memberId"))
@@ -29,11 +33,20 @@ public class PostRepository {
             .createdAt(resultSet.getObject("createdAt", LocalDateTime.class))
             .build();
 
+    static final private RowMapper<DailyPostCount> DAILY_POST_COUNT_ROW_MAPPER = (ResultSet resultSet, int rowNum)
+            -> new DailyPostCount(
+                    resultSet.getLong("memberId"),
+                    resultSet.getObject("createdDate", LocalDate.class),
+                    resultSet.getLong("count")
+            );
+
+
     public Post save(Post post) {
         if(post.getId() == null)
             return insert(post);
         throw new UnsupportedOperationException("Post doesn't support renewal.");
     }
+
 
     private Post insert(Post post) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
@@ -51,8 +64,22 @@ public class PostRepository {
                 .build();
     }
 
+
+    public List<DailyPostCount> groupByCreatedDateOnMember(DailyPostCountRequest request) {
+        var sql = String.format(
+                """
+                SELECT createdDate, memberId, count(id) AS count
+                FROM %s
+                WHERE memberId = :memberId and createdDate between :firstDate and :lastDate
+                GROUP BY memberId, createdDate
+                """, TABLE);
+        var param = new BeanPropertySqlParameterSource(request);
+        return namedParameterJdbcTemplate.query(sql, param, DAILY_POST_COUNT_ROW_MAPPER);
+    }
+
+
     public List<Post> findAll() {
         var sql = String.format("SELECT * FROM %s", TABLE);
-        return namedParameterJdbcTemplate.query(sql, ROW_MAPPER);
+        return namedParameterJdbcTemplate.query(sql, POST_ROW_MAPPER);
     }
 }

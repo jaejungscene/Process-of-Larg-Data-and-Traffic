@@ -35,8 +35,8 @@ public class PostTest {
         System.out.println("> "+ post01.getId());
         System.out.println("> "+ post01.getMemberId());
         System.out.println("> "+ post01.getContents());
-        System.out.println("> "+ post01.getCreateDate());
-        System.out.println("> "+ post01.getCreateAt());
+        System.out.println("> "+ post01.getCreatedDate());
+        System.out.println("> "+ post01.getCreatedAt());
     }
 
     @Test

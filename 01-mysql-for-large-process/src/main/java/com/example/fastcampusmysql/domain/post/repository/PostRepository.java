@@ -44,9 +44,20 @@ public class PostRepository {
     public Post save(Post post) {
         if(post.getId() == null)
             return insert(post);
-        throw new UnsupportedOperationException("Post doesn't support renewal.");
+        throw new UnsupportedOperationException("Post doesn't support Id renewal.");
     }
 
+    public void bulkInsert(List<Post> posts) {
+        var sql = String.format("""
+                INSERT INTO %s (memberId, contents, createdDate, createdAt)
+                VALUES (:memberId, :contents, :createdDate, :createdAt)
+                """, TABLE);
+        SqlParameterSource[] params = posts
+                .stream()
+                .map(BeanPropertySqlParameterSource::new)
+                .toArray(SqlParameterSource[]::new);
+        namedParameterJdbcTemplate.batchUpdate(sql, params);
+    }
 
     private Post insert(Post post) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())

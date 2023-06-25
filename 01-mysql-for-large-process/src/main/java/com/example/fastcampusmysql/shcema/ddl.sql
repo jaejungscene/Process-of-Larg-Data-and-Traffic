@@ -52,4 +52,5 @@
 #     on Post (createdDate);
 #
 # select * from Follow;
-select * from Member;
+# select * from Member;
+Select count(id) from Post;

@@ -3,6 +3,9 @@ package com.example.fastcampusmysql;
 import lombok.*;
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 record Rectang(
         double length, double width
 ){
@@ -17,6 +20,14 @@ class tempClass{
 }
 
 public class TempTest {
+
+    @Test
+    void IntStream_test() {
+        Stream<Double> s = IntStream.range(0, 5)
+                .mapToObj(i -> Double.valueOf(i)/2);
+        s.forEach(i -> System.out.println(i + "/" + i.getClass()));
+    }
+
     @Test
     void recordClass_Test(){
         System.out.println("---------------------");

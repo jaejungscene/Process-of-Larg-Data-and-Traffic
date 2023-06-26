@@ -1,56 +1,37 @@
-# create table Member
-# (
-#     id int auto_increment,
-#     email varchar(20) not null,
-#     nickname varchar(20) not null,
-#     birthday date not null,
-#     createdAt datetime not null,
-#     constraint member_id_uindex
-#         primary key (id)
-# );
-#
-# create table MemberNicknameHistory
-# (
-#     id int auto_increment,
-#     memberId int not null,
-#     nickname varchar(20) not null,
-#     createdAt datetime not null,
-#     constraint memberNicknameHistory_id_uindex
-#         primary key (id)
-# );
-#
-# create table Follow
-# (
-#     id int auto_increment,
-#     fromMemberId int not null,
-#     toMemberId int not null,
-#     createdAt datetime not null,
-#     constraint Follow_id_uindex
-#         primary key (id)
-# );
-#
-# create unique index Follow_fromMemberId_toMemberId_uindex
-#     on Follow (fromMemberId, toMemberId);
-#
-#
-#
-# create table Post
-# (
-#     id int auto_increment,
-#     memberId int not null,
-#     contents varchar(100) not null,
-#     createdDate date not null,
-#     createdAt datetime not null,
-#     constraint POST_id_uindex
-#         primary key (id)
-# );
-#
-# create index Post__index_member_id
-#     on Post (memberId);
-#
-# create index Post__index_created_date
-#     on Post (createdDate);
-#
-# select * from Follow;
-# select * from Member;
-Select count(id) from Post;
+#### count is "1,001,089"
+# select count(id) as count
+# from Post
+# where memberId=2 and createdDate between '1900-01-01' and '2024-01-01'
+
+# select count(*)
+# from Post;
+
+#### search rows is "1,496,436"
+explain select createdDate, memberId, count(id) as count
+from Post use index (Post__index_member_id_created_date)
+where memberId=2 and createdDate between '1900-01-01' and '2024-01-01'
+group by memberId, createdDate;
+
+create index Post__index_member_id
+    on Post (memberId);
+
+create index Post__index_created_date
+    on Post (createdDate);
+
+create index Post__index_member_id_created_date
+    on Post (memberId, createdDate);
+
+show indexes from Post;
+# drop index Post__index_member_id on Post;
+# drop index Post__index_created_date on Post;
+# drop index Post__index_member_id_created_date on Post;
+# drop index Post__index_member_id on Post;
+# show indexes from Post;
+
+# select count(distinct createdDate)
+# from Post;
+
+# explain select createdDate, memberId, count(id) as count
+# from Post use index (Post__index_member_id_created_date)
+# where memberId=0 and createdDate between '1900-01-01' and '2024-01-01'
+# group by memberId, createdDate;

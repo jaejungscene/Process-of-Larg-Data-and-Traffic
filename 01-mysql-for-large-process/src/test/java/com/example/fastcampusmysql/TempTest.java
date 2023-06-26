@@ -1,8 +1,12 @@
 package com.example.fastcampusmysql;
 
 import lombok.*;
+import org.assertj.core.api.Assertions;
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.Test;
 
+import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -20,9 +24,24 @@ class tempClass{
 }
 
 public class TempTest {
+    @Test
+    void testRandomAndEasyRandom() {
+        // given
+        Random random = new Random(10L);
+        EasyRandom easyRandom = new EasyRandom(new EasyRandomParameters().seed(10L));
+        // when
+        long long1 = random.nextLong();
+        long long2 = easyRandom.nextLong();
+        // then
+        System.out.println(">>> " + long1);
+        System.out.println(">>> " + long2);
+        Assertions.assertThat(long1).isEqualTo(long2);
+    }
 
     @Test
     void IntStream_test() {
+        Double x1 = 13.0;
+        System.out.println(">>>>> " + x1.hashCode());
         Stream<Double> s = IntStream.range(0, 5)
                 .mapToObj(i -> Double.valueOf(i)/2);
         s.forEach(i -> System.out.println(i + "/" + i.getClass()));

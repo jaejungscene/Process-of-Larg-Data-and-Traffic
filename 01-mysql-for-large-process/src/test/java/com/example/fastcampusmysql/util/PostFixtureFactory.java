@@ -6,11 +6,15 @@ import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 
 import java.time.LocalDate;
+import java.util.Random;
 
 import static org.jeasy.random.FieldPredicates.*;
 
 public class PostFixtureFactory {
-    static public EasyRandom get(Long memberId, LocalDate firstDate, LocalDate lastDate){
+    static public EasyRandom get(
+            Long memberIdLowerbound, Long memberIdUpperbound,
+            LocalDate firstDate, LocalDate lastDate
+    ){
         var idPredicate = named("id")
                 .and(ofType(Long.class))
                 .and(inClass(Post.class));
@@ -21,7 +25,7 @@ public class PostFixtureFactory {
 
         var param = new EasyRandomParameters()
                 .excludeField(idPredicate)
-                .randomize(memberIdPredicate, () -> memberId)
+                .randomize(memberIdPredicate, () -> new Random().nextLong(memberIdLowerbound,memberIdUpperbound+1))
                 .dateRange(firstDate, lastDate);
         return new EasyRandom(param);
     }

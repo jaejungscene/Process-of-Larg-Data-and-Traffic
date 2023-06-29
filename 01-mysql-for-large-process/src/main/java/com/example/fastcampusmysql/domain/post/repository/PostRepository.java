@@ -1,9 +1,14 @@
 package com.example.fastcampusmysql.domain.post.repository;
 
+import com.example.fastcampusmysql.domain.PageHelper;
 import com.example.fastcampusmysql.domain.post.dto.DailyPostCount;
 import com.example.fastcampusmysql.domain.post.dto.DailyPostCountRequest;
 import com.example.fastcampusmysql.domain.post.entity.Post;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -40,6 +45,36 @@ public class PostRepository {
                     resultSet.getLong("count")
             );
 
+    public Page<Post> findAllByMemberId(Long memberId, Pageable pageable) {
+        System.out.println(pageable.getSort());
+        System.out.println(pageable);
+        var sql = String.format("""
+                select *
+                from %s
+                where memberId = :memberId
+                order by %s
+                limit :size
+                offset :offset
+                """, TABLE, PageHelper.orderBy(pageable.getSort()));
+
+        var params = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("size", pageable.getPageSize())
+                .addValue("offset", pageable.getOffset());
+
+        var posts = namedParameterJdbcTemplate.query(sql, params, POST_ROW_MAPPER);
+        return new PageImpl(posts, pageable, getCount(memberId));
+    }
+
+    private Long getCount(Long memberId) {
+        var sql = String.format("""
+                SELECT count(id)
+                FROM %s
+                WHERE memberId = :memberId
+                """, TABLE);
+        var params = new MapSqlParameterSource().addValue("memberId", memberId);
+        return namedParameterJdbcTemplate.queryForObject(sql, params, Long.class);
+    }
 
     public Post save(Post post) {
         if(post.getId() == null)

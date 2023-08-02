@@ -1,13 +1,15 @@
 package com.example.fastcampusmysql.domain.member;
 
+import com.example.fastcampusmysql.domain.member.repository.MemberRepository;
 import com.example.fastcampusmysql.util.MemberFixtureFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.stream.IntStream;
+public class MemberTest {
 
-public class Member {
+
     @DisplayName("회원은 닉네임을 변경할 수 있다.")
     @Test
     public void testChangeName(){

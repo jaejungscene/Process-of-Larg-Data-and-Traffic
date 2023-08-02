@@ -2,6 +2,8 @@ package com.example.fastcampusmysql.domain.member.repository;
 
 import com.example.fastcampusmysql.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -32,9 +34,13 @@ public class MemberRepository {
 
 
     public Member save(Member member) {
+        System.out.println(">>>>>>>>>>>>>>>>>> 01");
+        System.out.println(member.getId());
         if (member.getId() == null) {
+            System.out.println(">>>>>>>>>>>>>>>>>>03");
             return insert(member);
         }
+        System.out.println(">>>>>>>>>>>>>>>>>> 02");
         return update(member);
     }
 
@@ -44,7 +50,9 @@ public class MemberRepository {
                 .usingGeneratedKeyColumns("id");
 
         SqlParameterSource params = new BeanPropertySqlParameterSource(member);
+        System.out.println(params);
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
+
         return Member
                 .builder()
                 .id(id)

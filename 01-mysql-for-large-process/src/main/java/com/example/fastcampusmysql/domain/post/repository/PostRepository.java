@@ -1,15 +1,13 @@
 package com.example.fastcampusmysql.domain.post.repository;
 
-import com.example.fastcampusmysql.domain.PageHelper;
+import com.example.fastcampusmysql.util.PageHelper;
 import com.example.fastcampusmysql.domain.post.dto.DailyPostCount;
 import com.example.fastcampusmysql.domain.post.dto.DailyPostCountRequest;
 import com.example.fastcampusmysql.domain.post.entity.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -45,7 +43,7 @@ public class PostRepository {
                     resultSet.getLong("count")
             );
 
-    public Page<Post> findAllByMemberId(Long memberId, Pageable pageable) {
+    public Page<Post> findAllByMemberIdForPagination(Long memberId, Pageable pageable) {
         System.out.println(pageable.getSort());
         System.out.println(pageable);
         var sql = String.format("""
@@ -64,6 +62,37 @@ public class PostRepository {
 
         var posts = namedParameterJdbcTemplate.query(sql, params, POST_ROW_MAPPER);
         return new PageImpl(posts, pageable, getCount(memberId));
+    }
+
+    public List<Post> findAllByMemberIdForCursorBasedPagination(Long memberId, Long size) {
+        var sql = String.format("""
+                select *
+                from %s
+                where memberId = :memberId
+                ORDER BY id DESC
+                limit :size
+                """, TABLE);
+
+        var params = new MapSqlParameterSource()
+                .addValue("memberId", memberId)
+                .addValue("size", size);
+        return namedParameterJdbcTemplate.query(sql, params, POST_ROW_MAPPER);
+    }
+
+    public List<Post> findAllByMemberIdForCursorBasedPaginationByIdDesc(Long id, Long memberId, Long size) {
+        var sql = String.format("""
+                select *
+                from %s
+                where memberId = :memberId and id < :id
+                ORDER BY id DESC
+                limit :size
+                """, TABLE);
+
+        var params = new MapSqlParameterSource()
+                .addValue("id", id)
+                .addValue("memberId", memberId)
+                .addValue("size", size);
+        return namedParameterJdbcTemplate.query(sql, params, POST_ROW_MAPPER);
     }
 
     private Long getCount(Long memberId) {
@@ -124,8 +153,8 @@ public class PostRepository {
     }
 
 
-    public List<Post> findAll() {
-        var sql = String.format("SELECT * FROM %s", TABLE);
+    public List<Post> findAllWithLimit() {
+        var sql = String.format("SELECT * FROM %s LIMIT 5", TABLE);
         return namedParameterJdbcTemplate.query(sql, POST_ROW_MAPPER);
     }
 }

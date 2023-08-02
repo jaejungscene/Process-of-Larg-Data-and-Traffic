@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class MemberWriteService {
     final private MemberRepository memberRepository;
     final private MemberNicknameHistoryRepository memberNicknameHistoryRepository;
+
     public Member register(RegisterMemberCommand command) {
         /**
          * Desc:
@@ -31,6 +32,7 @@ public class MemberWriteService {
                 .email(command.email())
                 .birthday(command.birthday())
                 .build();
+        System.out.println(">>>>>>>>>>> check 2");
         var savedMember = memberRepository.save(member);
         saveMemberNicknameHistory(savedMember);
 

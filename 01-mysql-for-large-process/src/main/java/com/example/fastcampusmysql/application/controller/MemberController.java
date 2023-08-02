@@ -19,21 +19,24 @@ public class MemberController {
     final private MemberReadService memberReadService;
 
 
-    @GetMapping("/members")
+    @GetMapping("/member/all")
     public List<MemberDto> getAllMembers(){
         return memberReadService.getAllMembers();
     }
-    @PostMapping("/members")
+
+    @PostMapping("/member")
     public MemberDto register(@RequestBody RegisterMemberCommand command) {
         var member = memberWriteService.register(command);
         return memberReadService.toDto(member);
     }
-    @GetMapping("/members/{id}")
+
+    @GetMapping("/member/{id}")
     public MemberDto getMember(@PathVariable Long id) {
 
         return memberReadService.getMember(id);
     }
-    @PostMapping("members/{id}/name")
+
+    @PostMapping("member/{id}/name")
     public MemberDto changeNickname(@PathVariable Long id, @RequestBody String nickname){
         memberWriteService.changeNickname(id, nickname);
         return memberReadService.getMember(id);

@@ -2,12 +2,14 @@ package com.example.fastcampusmysql.domain.member.entity;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
+@ToString
 public class MemberNicknameHistory {
     final private Long id;
     final private Long memberId;

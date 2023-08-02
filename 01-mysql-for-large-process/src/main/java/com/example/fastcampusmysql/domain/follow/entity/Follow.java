@@ -2,11 +2,13 @@ package com.example.fastcampusmysql.domain.follow.entity;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
+@ToString
 public class Follow {
     final private Long id;
     final private Long fromMemberId;

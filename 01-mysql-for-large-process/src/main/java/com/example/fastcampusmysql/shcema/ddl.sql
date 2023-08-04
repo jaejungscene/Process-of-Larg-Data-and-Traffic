@@ -82,6 +82,12 @@ from Post use index ()
 where createdDate between '1900-01-01' and '1900-12-01'
 LIMIT 5;
 ######################################################################
+explain SELECT *
+FROM POST
+WHERE
+    memberId IN (2,3,4)
+ORDER BY id DESC
+LIMIT 10;
 
 explain select id
 from Post use index (Post__index_created_date)
@@ -89,7 +95,10 @@ where createdDate between '1900-01-01' and '1900-12-01'
 LIMIT 5;
 
 select *
-from Member;
+from Follow;
+
+INSERT INTO Follow(fromMemberId, toMemberId, createdAt)
+VALUES(4, 1, '2023-05-12');
 
 select count(*)
 from POST;

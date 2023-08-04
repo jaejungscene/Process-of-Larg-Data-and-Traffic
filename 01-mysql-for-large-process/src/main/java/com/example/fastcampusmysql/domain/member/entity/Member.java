@@ -1,23 +1,28 @@
 package com.example.fastcampusmysql.domain.member.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.util.Assert;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
 public class Member {
-    final private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String nickname;
-    final private String email;
-    final private LocalDate birthday;
-    final private static Long NAME_MAX_LENGTH = 20L;
-    final private LocalDateTime createdAt;
+    private String email;
+    private LocalDate birthday;
+    @Column(name = "createdAt")
+    private LocalDateTime createdAt;
+
+    private static Long NAME_MAX_LENGTH = 20L;
 
     @Builder
     public Member(Long id, String nickname, String email, LocalDate birthday, LocalDateTime createdAt) {
@@ -35,7 +40,7 @@ public class Member {
         nickname = to;
     }
 
-    private void validateNickname(String nickname) {
+    private static void validateNickname(String nickname) {
         Assert.isTrue(nickname.length() <= NAME_MAX_LENGTH, "최대 길이를 초과했습니다.");
     }
 }

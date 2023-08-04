@@ -1,19 +1,18 @@
 package com.example.fastcampusmysql.domain.member;
 
-import com.example.fastcampusmysql.domain.member.repository.MemberRepository;
+import com.example.fastcampusmysql.domain.member.repository.JdbcTemplateMemberRepository;
 import com.example.fastcampusmysql.util.MemberFixtureFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 
 @SpringBootTest
 public class MemberRepoTest {
     @Autowired
-    MemberRepository memberRepository;
+    JdbcTemplateMemberRepository memberRepository;
 
     @Test
 //    @Transactional

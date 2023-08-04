@@ -26,7 +26,7 @@ import java.util.OptionalLong;
 public class PostReadService {
     final private PostRepository postRepository;
 
-    public PostDto toPostDto(Post post) {
+    public static PostDto toPostDto(Post post) {
         return new PostDto(
                 post.getId(),
                 post.getMemberId(),
@@ -36,19 +36,24 @@ public class PostReadService {
         );
     }
 
+    private static long getNextKey(List<Post> posts) {
+        return posts
+                .stream()
+                .mapToLong(Post::getId)
+                .min()
+                .orElse(CursorRequest.NONE_KEY);
+    }
+
     @Transactional
     public List<PostDto> getAll() {
         return postRepository.findAllWithLimit()
                 .stream()
-                .map(this::toPostDto)
+                .map(PostReadService::toPostDto)
                 .toList();
     }
 
     @Transactional
     public List<DailyPostCount> getDailyPostCount(DailyPostCountRequest request) {
-        /**
-         * return List -> [작성일자, 작성회원, 작성 게시물 갯수]
-         */
         return postRepository.groupByCreatedDateOnMember(request);
     }
 
@@ -57,21 +62,36 @@ public class PostReadService {
         return postRepository.findAllByMemberIdForPagination(memberId, pageable);
     }
 
+    @Transactional
     public PageCursor<Post> getPosts(Long memberId, CursorRequest cursorRequest) {
         List<Post> posts = findAllBy(memberId, cursorRequest);
-        Long nextKey = posts
-                .stream()
-                .mapToLong(Post::getId)
-                .min()
-                .orElse(CursorRequest.NONE_KEY);
+        Long nextKey = getNextKey(posts);
         return new PageCursor<>(cursorRequest.next(nextKey), posts);
     }
 
+    @Transactional
+    public PageCursor<Post> getPosts(List<Long> memberIds, CursorRequest cursorRequest) {
+        List<Post> posts = findAllBy(memberIds, cursorRequest);
+        Long nextKey = getNextKey(posts);
+        return new PageCursor<>(cursorRequest.next(nextKey), posts);
+    }
+
+    @Transactional
     public List<Post> findAllBy(Long memberId, CursorRequest cursorRequest) {
         if (cursorRequest.hasKey()) {
-            return postRepository.findAllByMemberIdForCursorBasedPaginationByIdDesc(cursorRequest.key(), memberId, cursorRequest.size());
+            return postRepository.findAllByLessThanIdAndMemberIdAndOrderBYIdDesc(cursorRequest.key(), memberId, cursorRequest.size());
         } else{
-            return postRepository.findAllByMemberIdForCursorBasedPagination(memberId, cursorRequest.size());
+            return postRepository.findAllByMemberIdAndOrderByIdDesc(memberId, cursorRequest.size());
         }
     }
+
+    @Transactional
+    public List<Post> findAllBy(List<Long> memberIds, CursorRequest cursorRequest) {
+        if (cursorRequest.hasKey()) {
+            return postRepository.findAllByLessThanIdAndInMemberIdAndOrderBYIdDesc(cursorRequest.key(), memberIds, cursorRequest.size());
+        } else{
+            return postRepository.findAllByInMemberIdAndOrderByIdDesc(memberIds, cursorRequest.size());
+        }
+    }
+
 }

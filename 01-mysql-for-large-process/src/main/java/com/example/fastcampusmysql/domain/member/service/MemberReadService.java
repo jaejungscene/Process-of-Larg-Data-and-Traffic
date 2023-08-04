@@ -5,8 +5,10 @@ import com.example.fastcampusmysql.domain.member.dto.MemberNicknameHistoryDto;
 import com.example.fastcampusmysql.domain.member.entity.Member;
 import com.example.fastcampusmysql.domain.member.entity.MemberNicknameHistory;
 import com.example.fastcampusmysql.domain.member.repository.MemberNicknameHistoryRepository;
+import com.example.fastcampusmysql.domain.member.repository.JdbcTemplateMemberRepository;
 import com.example.fastcampusmysql.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -16,6 +16,7 @@ public class FollowReadService {
     public FollowDto toDto(Follow follow) {
         return new FollowDto(follow.getId(), follow.getFromMemberId(), follow.getToMemberId(), follow.getCreatedAt());
     }
+
     public List<FollowDto> getFollowingsOf(Long memberId){
         return followRepository.findAllByFromMemberId(memberId)
                 .stream()

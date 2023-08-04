@@ -3,7 +3,8 @@ package com.example.fastcampusmysql.domain.member.repository;
 import com.example.fastcampusmysql.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -18,9 +19,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @Repository
-public class MemberRepository {
+@RequiredArgsConstructor
+//@Primary
+public class JdbcTemplateMemberRepository implements MemberRepository{
     final private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     static final private String TABLE = "Member";
     static final private RowMapper<Member> ROW_MAPPER = (ResultSet resultSet, int rowNum) -> Member
@@ -31,7 +33,6 @@ public class MemberRepository {
             .birthday(resultSet.getObject("birthday", LocalDate.class))
             .createdAt(resultSet.getObject("createdAt", LocalDateTime.class))
             .build();
-
 
     public Member save(Member member) {
         System.out.println(member.getId());
@@ -60,6 +61,7 @@ public class MemberRepository {
                 .build();
 
     }
+
     public Optional<Member> findById(Long id) {
         /**
          * select * from Member

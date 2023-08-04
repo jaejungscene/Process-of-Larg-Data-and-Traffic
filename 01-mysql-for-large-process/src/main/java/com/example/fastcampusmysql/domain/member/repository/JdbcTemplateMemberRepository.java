@@ -34,13 +34,10 @@ public class MemberRepository {
 
 
     public Member save(Member member) {
-        System.out.println(">>>>>>>>>>>>>>>>>> 01");
         System.out.println(member.getId());
         if (member.getId() == null) {
-            System.out.println(">>>>>>>>>>>>>>>>>>03");
             return insert(member);
         }
-        System.out.println(">>>>>>>>>>>>>>>>>> 02");
         return update(member);
     }
 

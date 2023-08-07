@@ -13,13 +13,15 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
 //@Primary
 public class JdbcTemplateMemberRepository implements MemberRepository{
@@ -92,5 +94,17 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
         SqlParameterSource params = new BeanPropertySqlParameterSource(member);
         namedParameterJdbcTemplate.update(sql, params);
         return member;
+    }
+
+
+    @PostConstruct
+    public void init() throws Exception
+    {
+        System.out.println(">>> %s init()".formatted(this.getClass().getName()));
+    }
+    @PreDestroy
+    public void destroy() throws Exception
+    {
+        System.out.println(">>> %s destroy()".formatted(this.getClass().getName()));
     }
 }

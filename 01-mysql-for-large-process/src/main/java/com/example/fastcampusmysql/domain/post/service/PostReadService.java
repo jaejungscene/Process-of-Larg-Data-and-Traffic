@@ -58,11 +58,17 @@ public class PostReadService {
     }
 
     @Transactional
+    /**
+     * for Offset Pagination
+     */
     public Page<Post> getPosts(Long memberId, Pageable pageable){
         return postRepository.findAllByMemberIdForPagination(memberId, pageable);
     }
 
     @Transactional
+    /**
+     * for Cursor Pagination
+     */
     public PageCursor<Post> getPosts(Long memberId, CursorRequest cursorRequest) {
         List<Post> posts = findAllBy(memberId, cursorRequest);
         Long nextKey = getNextKey(posts);
@@ -70,6 +76,9 @@ public class PostReadService {
     }
 
     @Transactional
+    /**
+     * for Timeline
+     */
     public PageCursor<Post> getPosts(List<Long> memberIds, CursorRequest cursorRequest) {
         List<Post> posts = findAllBy(memberIds, cursorRequest);
         Long nextKey = getNextKey(posts);

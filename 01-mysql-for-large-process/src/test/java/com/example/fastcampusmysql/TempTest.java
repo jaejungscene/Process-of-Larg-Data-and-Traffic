@@ -1,11 +1,16 @@
 package com.example.fastcampusmysql;
 
 import lombok.*;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.assertj.core.api.Assertions;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -75,5 +80,11 @@ public class TempTest {
         System.out.println(">>> " + tempClass.class);
         var sql = String.format("SELECT * FROM %s WHERE id = :id", "hello world");
         System.out.println(sql);
+    }
+
+    @Test
+    void pageable() {
+        Pageable request = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC,"name"));
+        System.out.println(request);
     }
 }

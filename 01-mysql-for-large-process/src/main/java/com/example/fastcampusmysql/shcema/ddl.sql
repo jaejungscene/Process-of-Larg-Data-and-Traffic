@@ -95,7 +95,8 @@ where createdDate between '1900-01-01' and '1900-12-01'
 LIMIT 5;
 
 select *
-from Follow;
+from POST
+LIMIT 2;
 
 INSERT INTO Follow(fromMemberId, toMemberId, createdAt)
 VALUES(4, 1, '2023-05-12');

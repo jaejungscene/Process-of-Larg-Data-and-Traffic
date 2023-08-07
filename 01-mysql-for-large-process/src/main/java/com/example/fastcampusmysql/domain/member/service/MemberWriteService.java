@@ -10,32 +10,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 @RequiredArgsConstructor
 @Service
 public class MemberWriteService {
     final private MemberRepository memberRepository;
     final private MemberNicknameHistoryRepository memberNicknameHistoryRepository;
 
-    public Member register(RegisterMemberCommand command) {
-        /**
-         * Desc:
-         *      register user's info(e-mail, nickname, birth)
-         *      nickname don't exceed 10 letters.
-         *
-         * parameters:
-         *      memberRegisterCommand
-         *
-         * memberRepository.save(member)
-         */
-
-        var member = Member
+    public Member registerMember(RegisterMemberCommand command) {
+        Member member = Member
                 .builder()
                 .nickname(command.nickname())
                 .email(command.email())
                 .birthday(command.birthday())
                 .build();
-        System.out.println(">>>>>>>>>>> check 2");
-        var savedMember = memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
         saveMemberNicknameHistory(savedMember);
 
         return savedMember;
@@ -59,5 +50,17 @@ public class MemberWriteService {
                 .build();
 
         memberNicknameHistoryRepository.save(history);
+    }
+
+
+    @PostConstruct
+    public void init() throws Exception
+    {
+        System.out.println(">>> %s init()".formatted(this.getClass().getName()));
+    }
+    @PreDestroy
+    public void destroy() throws Exception
+    {
+        System.out.println(">>> %s destroy()".formatted(this.getClass().getName()));
     }
 }

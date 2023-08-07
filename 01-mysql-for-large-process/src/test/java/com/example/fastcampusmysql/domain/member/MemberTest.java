@@ -29,4 +29,11 @@ public class MemberTest {
                 () -> member.changeNickname(overMaxLengthName)
         );
     }
+
+    @Test
+    public void temp() {
+        System.out.println(
+                "hello %s".formatted(this.getClass())
+        );
+    }
 }

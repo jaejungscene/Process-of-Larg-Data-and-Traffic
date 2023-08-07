@@ -10,6 +10,7 @@ import com.example.fastcampusmysql.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,11 +19,6 @@ import java.util.List;
 public class MemberReadService {
     final private MemberRepository memberRepository;
     final private MemberNicknameHistoryRepository memberNicknameHistoryRepository;
-
-    public MemberDto getMember(Long id){
-        var member = memberRepository.findById(id).orElseThrow();
-        return toDto(member);
-    }
 
     public MemberDto toDto(Member member) {
         return new MemberDto(member.getId(), member.getEmail(), member.getNickname(), member.getBirthday());
@@ -37,6 +33,13 @@ public class MemberReadService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public MemberDto getMember(Long id){
+        var member = memberRepository.findById(id).orElseThrow();
+        return toDto(member);
+    }
+
+    @Transactional
     public List<MemberDto> getMembersOf(List<Long> ids){
         var members = memberRepository.findAllByIdIn(ids);
         return members.stream().map(this::toDto).toList();

@@ -44,8 +44,6 @@ public class PostRepository {
             );
 
     public Page<Post> findAllByMemberIdForPagination(Long memberId, Pageable pageable) {
-        System.out.println(pageable.getSort());
-        System.out.println(pageable);
         var sql = String.format("""
                 select *
                 from %s
@@ -68,7 +66,7 @@ public class PostRepository {
         var sql = String.format("""
                 SELECT *
                 FROM %s
-                WHERE memberId :memberId
+                WHERE memberId = :memberId
                 ORDER BY id DESC
                 LIMIT :size
                 """, TABLE);

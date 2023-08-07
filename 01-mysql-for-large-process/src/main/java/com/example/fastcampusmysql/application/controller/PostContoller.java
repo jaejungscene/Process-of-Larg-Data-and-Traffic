@@ -41,7 +41,11 @@ public class PostContoller {
         return postReadService.getDailyPostCount(request);
     }
 
-    @GetMapping("/members/{memberId}")
+    @GetMapping("/member/{memberId}/offset")
+    /**
+     * Demo request
+     * - http://localhost:8080/posts/member/1/offset?page=1&size=3&sort=createdDate,desc&sort=id,asc
+     */
     public Page<Post> getPosts(
             @PathVariable Long memberId,
             Pageable pageable
@@ -49,7 +53,12 @@ public class PostContoller {
         return postReadService.getPosts(memberId, pageable);
     }
 
-    @GetMapping("/member/{memberId}/by-cursor")
+    @GetMapping("/member/{memberId}/cursor")
+    /**
+     * Demo request
+     * - first: http://localhost:8080/posts/member/1/cursor?size=3
+     * - others: http://localhost:8080/posts/member/1/cursor?key=3243000&size=3
+     */
     public PageCursor<Post> getPostsByCursor(
             @PathVariable Long memberId,
             CursorRequest cursorRequest

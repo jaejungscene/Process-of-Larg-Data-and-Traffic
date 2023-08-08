@@ -26,6 +26,7 @@ public class TimelineRepository {
             .builder()
             .id(resultSet.getLong("id"))
             .memberId(resultSet.getLong("memberId"))
+            .postId(resultSet.getLong("postId"))
             .createdAt(resultSet.getObject("createdAt", LocalDateTime.class))
             .build();
 
@@ -61,7 +62,7 @@ public class TimelineRepository {
         namedParameterJdbcTemplate.batchUpdate(sql, params);
     }
 
-    public List<Timeline> findAllByMemberIdAndOrderByIdDesc(Long memberId, int size){
+    public List<Timeline> findAllByMemberIdAndOrderByIdDesc(Long memberId, Long size){
         var sql = String.format("""
                 SELECT *
                 FROM %s

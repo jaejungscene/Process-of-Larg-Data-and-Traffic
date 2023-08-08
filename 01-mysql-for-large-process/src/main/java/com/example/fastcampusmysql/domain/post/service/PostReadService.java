@@ -77,12 +77,20 @@ public class PostReadService {
 
     @Transactional
     /**
-     * for Timeline
+     * for Pull model
      */
     public PageCursor<Post> getPosts(List<Long> memberIds, CursorRequest cursorRequest) {
         List<Post> posts = findAllBy(memberIds, cursorRequest);
         Long nextKey = getNextKey(posts);
         return new PageCursor<>(cursorRequest.next(nextKey), posts);
+    }
+
+    @Transactional
+    /**
+     * for Push model
+     */
+    public List<Post> getPosts(List<Long> postIds) {
+        return postRepository.findAllByInId(postIds);
     }
 
     @Transactional

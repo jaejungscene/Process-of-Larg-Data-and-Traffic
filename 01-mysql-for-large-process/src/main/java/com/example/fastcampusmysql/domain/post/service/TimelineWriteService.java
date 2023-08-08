@@ -1,4 +1,4 @@
-package com.example.fastcampusmysql.domain.member.service;
+package com.example.fastcampusmysql.domain.post.service;
 
 import com.example.fastcampusmysql.domain.member.repository.TimelineRepository;
 import com.example.fastcampusmysql.domain.post.entity.Timeline;
@@ -14,7 +14,10 @@ public class TimelineWriteService {
 
     public void deliveryToTimeline(Long postId, List<Long> toMemberIds){
         var timelines =toMemberIds.stream()
-                .map((memberId) -> Timeline.builder().postId(postId).build())
+                .map((memberId) -> Timeline.builder()
+                        .memberId(memberId)
+                        .postId(postId)
+                        .build())
                 .toList();
 
         timelineRepository.bulkInsert(timelines);

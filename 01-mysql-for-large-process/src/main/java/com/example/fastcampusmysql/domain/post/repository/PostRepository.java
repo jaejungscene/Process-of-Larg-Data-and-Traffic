@@ -62,6 +62,18 @@ public class PostRepository {
         return new PageImpl(posts, pageable, getCount(memberId));
     }
 
+    public List<Post> findAllByInId(List<Long> ids){
+        var sql = String.format("""
+                SELECT *
+                FROM %s
+                WHERE id IN (:ids)
+                """, TABLE);
+
+        var params = new MapSqlParameterSource()
+                .addValue("ids", ids);
+        return namedParameterJdbcTemplate.query(sql, params, POST_ROW_MAPPER);
+    }
+
     public List<Post> findAllByMemberIdAndOrderByIdDesc(Long memberId, Long size) {
         var sql = String.format("""
                 SELECT *

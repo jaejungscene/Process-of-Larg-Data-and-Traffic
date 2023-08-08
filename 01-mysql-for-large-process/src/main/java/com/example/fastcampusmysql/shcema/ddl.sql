@@ -46,6 +46,7 @@ create index Post__index_member_id_created_date
 
 drop index Post__index_member_id_created_date on POST;
 show indexes from Post;
+show indexes from Timeline;
 
 # drop index Post__index_member_id on Post;
 # drop index Post__index_created_date on Post;
@@ -64,9 +65,19 @@ select *
 from POST
 where memberId=1
 order by id DESC
-limit 9;
+limit 5;
 
+select * from Follow where toMemberId=2;
+select * from Timeline;
 
+delete  from Member where id in(2);
+
+update Member set id=6 where id=14;
+
+insert into Member(email, nickname, birthday, createdAt)
+    values ('jaejung@ajou.ac.kr', 'got', '1998-05-12', '2023-08-08');
+
+ALTER TABLE Member AUTO_INCREMENT = 7;
 ######################################################################
 with Covering as (
     SELECT id
@@ -98,6 +109,7 @@ select *
 from POST
 LIMIT 2;
 
+
 INSERT INTO Follow(fromMemberId, toMemberId, createdAt)
 VALUES(4, 1, '2023-05-12');
 
@@ -116,6 +128,8 @@ where memberId=4 or memberId=3
 order by id DESC ;
 
 drop table Member;
+
+##########################################################
 
 create table Member
 (
@@ -163,10 +177,11 @@ create table POST
         primary key (id)
 );
 
-create index POST__index_member_id
-    on POST (memberId);
-
-create index POST__index_created_date
-    on POST (createdDate);
-
-
+create table Timeline
+(
+    id int auto_increment,
+    memberId int not null,
+    postId int not null,
+    createdAt datetime not null,
+    constraint Timeline_id_uindex PRIMARY KEY (id)
+);

@@ -1,5 +1,6 @@
 package com.example.fastcampusmysql.application.controller;
 
+import com.example.fastcampusmysql.application.usecase.CreatePostUsecase;
 import com.example.fastcampusmysql.application.usecase.GetTimelinePostsUsecase;
 import com.example.fastcampusmysql.domain.post.dto.DailyPostCount;
 import com.example.fastcampusmysql.domain.post.dto.DailyPostCountRequest;
@@ -12,7 +13,6 @@ import com.example.fastcampusmysql.util.CursorRequest;
 import com.example.fastcampusmysql.util.PageCursor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +21,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/posts")
-public class PostContoller {
+public class PostController {
     final private PostWriteService postWriteService;
     final private PostReadService postReadService;
     final private GetTimelinePostsUsecase getTimelinePostsUsecase;
+    final private CreatePostUsecase createPostUsecase;
 
     @GetMapping("test")
     public List<PostDto> getAll() {
@@ -32,8 +33,8 @@ public class PostContoller {
     }
 
     @PostMapping("")
-    public Long create(@RequestBody PostCommand command) {
-        return postWriteService.create(command);
+    public Long createPostAndDeliver(@RequestBody PostCommand command) {
+        return createPostUsecase.execute(command);
     }
 
     @PostMapping("/member")
@@ -66,11 +67,19 @@ public class PostContoller {
         return postReadService.getPosts(memberId, cursorRequest);
     }
 
-    @GetMapping("/member/{memberId}/timeline")
-    public PageCursor<Post> getTimeline(
+    @GetMapping("/member/{memberId}/timeline-pull")
+    public PageCursor<Post> getTimelineByPull(
             @PathVariable Long memberId,
             CursorRequest cursorRequest
     ){
         return getTimelinePostsUsecase.execute(memberId, cursorRequest);
+    }
+
+    @GetMapping("/member/{memberId}/timeline-push")
+    public PageCursor<Post> getTimelineByPush(
+            @PathVariable Long memberId,
+            CursorRequest cursorRequest
+    ){
+        return getTimelinePostsUsecase.executeByTimeline(memberId, cursorRequest);
     }
 }

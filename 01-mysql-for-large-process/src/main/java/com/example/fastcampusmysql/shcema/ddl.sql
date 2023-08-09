@@ -68,11 +68,17 @@ order by id DESC
 limit 5;
 
 select * from Follow where toMemberId=2;
-select * from Timeline;
+select * from MemberNicknameHistory;
 
 delete  from Member where id in(2);
 
-update Member set id=6 where id=14;
+update MemberNicknameHistory
+SET
+    memberId=5
+WHERE id=1;
+
+INSERT INTO MemberNicknameHistory(memberId, nickname, createdAt)
+VALUES (7,'got','2023-08-08 00:00:00');
 
 insert into Member(email, nickname, birthday, createdAt)
     values ('jaejung@ajou.ac.kr', 'got', '1998-05-12', '2023-08-08');

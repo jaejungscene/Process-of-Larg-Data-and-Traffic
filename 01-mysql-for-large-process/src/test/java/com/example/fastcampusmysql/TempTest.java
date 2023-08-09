@@ -81,10 +81,15 @@ public class TempTest {
         var sql = String.format("SELECT * FROM %s WHERE id = :id", "hello world");
         System.out.println(sql);
     }
+    class InnerClass{
 
+    }
     @Test
     void pageable() {
         Pageable request = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC,"name"));
-        System.out.println(request);
+        System.out.println(">>> "+request.getClass().getName());
+        System.out.println(">>> "+PageRequest.of(0, 4).getClass().getTypeName());
+        System.out.println(">>> "+new InnerClass().getClass().getName());
+
     }
 }

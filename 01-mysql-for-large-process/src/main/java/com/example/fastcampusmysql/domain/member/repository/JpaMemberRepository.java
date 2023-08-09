@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @Repository
-@Primary
+//@Primary
 public interface JpaMemberRepository
 extends MemberRepository, JpaRepository<Member, Long>
 {

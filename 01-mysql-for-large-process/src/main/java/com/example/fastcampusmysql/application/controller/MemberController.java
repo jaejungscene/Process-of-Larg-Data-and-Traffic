@@ -7,9 +7,13 @@ import com.example.fastcampusmysql.domain.member.entity.Member;
 import com.example.fastcampusmysql.domain.member.service.MemberReadService;
 import com.example.fastcampusmysql.domain.member.service.MemberWriteService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.proxy.HibernateProxy;
+import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
+import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -53,6 +57,12 @@ public class MemberController {
     }
 
 
+    @PostConstruct
+    public void init() throws Exception
+    {
+        System.out.println(">>> %s init()".formatted(this.getClass().getName()));
+        System.out.println(">>> memberWriteService: "+ this.memberWriteService.getClass().getName());
+    }
 
     /**
      * Prac for comparsion between @PathVariable and @RequestParam

@@ -21,9 +21,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-//@Repository
+@Repository
 @RequiredArgsConstructor
-//@Primary
+@Primary
 public class JdbcTemplateMemberRepository implements MemberRepository{
     final private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     static final private String TABLE = "Member";
@@ -37,7 +37,6 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
             .build();
 
     public Member save(Member member) {
-        System.out.println(member.getId());
         if (member.getId() == null) {
             return insert(member);
         }
@@ -50,7 +49,6 @@ public class JdbcTemplateMemberRepository implements MemberRepository{
                 .usingGeneratedKeyColumns("id");
 
         SqlParameterSource params = new BeanPropertySqlParameterSource(member);
-        System.out.println(params);
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
         return Member

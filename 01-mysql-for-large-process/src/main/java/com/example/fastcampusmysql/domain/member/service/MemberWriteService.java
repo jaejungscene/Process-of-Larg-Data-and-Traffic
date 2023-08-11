@@ -23,12 +23,12 @@ public class MemberWriteService {
 
 
 
-//    @Transactional
+    @Transactional
     public Member registerMember(RegisterMemberCommand command) {
         return getMember(command);
     }
 
-//    @Transactional
+    @Transactional
     public Member getMember(RegisterMemberCommand command) {
         Member member = Member
                 .builder()
@@ -37,12 +37,12 @@ public class MemberWriteService {
                 .birthday(command.birthday())
                 .build();
 
-        System.out.println("01--------------");
+//        System.out.println("01--------------");
         Member savedMember = memberRepository.save(member);
-        System.out.println("02--------------"+savedMember);
-        var zero = 0/0;
+//        System.out.println("02--------------"+savedMember);
+//        var zero = 0/0;
         saveMemberNicknameHistory(savedMember);
-        System.out.println("03--------------");
+//        System.out.println("03--------------");
 
         return savedMember;
     }

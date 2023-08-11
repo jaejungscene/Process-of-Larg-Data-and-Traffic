@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -34,6 +35,7 @@ public class PostRepository {
             .contents(resultSet.getString("contents"))
             .createdDate(resultSet.getObject("createdDate", LocalDate.class))
             .createdAt(resultSet.getObject("createdAt", LocalDateTime.class))
+            .likeCount(resultSet.getLong("likeCount"))
             .build();
 
     static final private RowMapper<DailyPostCount> DAILY_POST_COUNT_ROW_MAPPER = (ResultSet resultSet, int rowNum)
@@ -60,6 +62,23 @@ public class PostRepository {
 
         var posts = namedParameterJdbcTemplate.query(sql, params, POST_ROW_MAPPER);
         return new PageImpl(posts, pageable, getCount(memberId));
+    }
+
+    public Optional<Post> findById(Long postId, Boolean requiredLock){
+
+        var sql = String.format("""
+                SELECT *
+                FROM %s
+                WHERE id=:id
+                """, TABLE);
+        if(requiredLock){
+            sql += "FOR UPDATE";
+        }
+        var params = new MapSqlParameterSource()
+                .addValue("id", postId);
+        return Optional.of(namedParameterJdbcTemplate.queryForObject(
+                sql, params, POST_ROW_MAPPER
+        ));
     }
 
     public List<Post> findAllByInId(List<Long> ids){
@@ -155,7 +174,8 @@ public class PostRepository {
     public Post save(Post post) {
         if(post.getId() == null)
             return insert(post);
-        throw new UnsupportedOperationException("Post doesn't support Id renewal.");
+        return update(post);
+//        throw new UnsupportedOperationException("Post doesn't support Id renewal.");
     }
 
     public void bulkInsert(List<Post> posts) {
@@ -203,5 +223,20 @@ public class PostRepository {
     public List<Post> findAllWithLimit() {
         var sql = String.format("SELECT * FROM %s LIMIT 5", TABLE);
         return namedParameterJdbcTemplate.query(sql, POST_ROW_MAPPER);
+    }
+
+    private Post update(Post post){
+        var sql = String.format("""
+                UPDATE %s SET
+                memberId = :memberId,
+                contents = :contents,
+                createdDate = :createdDate,
+                createdAt= :createdAt,
+                likeCount = :likeCount
+                WHERE id = :id
+                """, TABLE);
+        SqlParameterSource params = new BeanPropertySqlParameterSource(post);
+        namedParameterJdbcTemplate.update(sql, params);
+        return post;
     }
 }

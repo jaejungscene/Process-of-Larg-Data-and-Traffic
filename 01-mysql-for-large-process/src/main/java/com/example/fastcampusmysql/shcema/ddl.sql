@@ -6,11 +6,27 @@
 # select count(*)
 # from Post;
 
+###################################################################
+select * from performance_schema.data_locks;
+select count(*) from performance_schema.data_locks;
+select * from information_schema.INNODB_TRX;
+
+start transaction;
+select * from post limit 5 for update;
+commit;
+
+###################################################################
+
 select count(*) from post;
-select * from post;
+select * from post limit 5;
 select * from Post
 limit 2
 offset 3;
+
+select * from Member;
+delete from Member where id>17;
+
+ALTER TABLE Post ADD COLUMN likeCount INT;
 
 #### search rows is "1,496,436"
 explain select createdDate, memberId, count(id) as count

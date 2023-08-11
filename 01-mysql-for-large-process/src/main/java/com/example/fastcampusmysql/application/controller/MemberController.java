@@ -36,7 +36,6 @@ public class MemberController {
 
     @GetMapping("/member/{id}")
     public MemberDto getMember(@PathVariable Long id) {
-
         return memberReadService.getMember(id);
     }
 

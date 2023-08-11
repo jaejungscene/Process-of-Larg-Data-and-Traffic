@@ -5,6 +5,7 @@ import com.example.fastcampusmysql.domain.post.entity.Post;
 import com.example.fastcampusmysql.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -22,5 +23,12 @@ public class PostWriteService {
          * from, to 회원 정보를 받아서 저장할텐데..
          * from <-> to validate
          */
+    }
+
+    @Transactional
+    public void likePost(Long postId){
+        var post = postRepository.findById(postId, false).orElseThrow();
+        post.increaseLikeCount();
+        postRepository.save(post);
     }
 }

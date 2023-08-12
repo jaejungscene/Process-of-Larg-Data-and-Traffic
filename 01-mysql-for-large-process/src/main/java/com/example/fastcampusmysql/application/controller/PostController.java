@@ -1,5 +1,6 @@
 package com.example.fastcampusmysql.application.controller;
 
+import com.example.fastcampusmysql.application.usecase.CreatePostLikeUsecase;
 import com.example.fastcampusmysql.application.usecase.CreatePostUsecase;
 import com.example.fastcampusmysql.application.usecase.GetTimelinePostsUsecase;
 import com.example.fastcampusmysql.domain.post.dto.DailyPostCount;
@@ -26,6 +27,7 @@ public class PostController {
     final private PostReadService postReadService;
     final private GetTimelinePostsUsecase getTimelinePostsUsecase;
     final private CreatePostUsecase createPostUsecase;
+    final private CreatePostLikeUsecase createPostLikeUsecase;
 
     @GetMapping("test")
     public List<PostDto> getAll() {
@@ -47,7 +49,7 @@ public class PostController {
      * Demo request
      * - http://localhost:8080/posts/member/1/offset?page=1&size=3&sort=createdDate,desc&sort=id,asc
      */
-    public Page<Post> getPosts(
+    public Page<PostDto> getPosts(
             @PathVariable Long memberId,
             Pageable pageable
     ) {
@@ -83,8 +85,29 @@ public class PostController {
         return getTimelinePostsUsecase.executeByTimeline(memberId, cursorRequest);
     }
 
-    @PostMapping("/{postId}/like")
-    public void likePost(Long postId) {
-        postWriteService.likePost(postId);
+    @PostMapping("/{postId}/pessimistic-lock/like")
+    public void likePostPes(Long postId) {
+        postWriteService.likePostPessimistic(postId);
+    }
+
+    @PostMapping("/{postId}/optimistic-lock/like")
+    public void likePostOpt(Long postId) {
+        postWriteService.likePostOptimistic(postId);
+    }
+
+    @PostMapping("/{postId}/like/v1")
+    public void likePostV1(
+            @PathVariable Long postId,
+            @RequestParam Long memberId
+    ) {
+        createPostLikeUsecase.execute(postId, memberId);
+    }
+
+    @PostMapping("/{postId}/like/v2")
+    public void likePostV2(
+            @PathVariable Long postId,
+            @RequestParam Long memberId
+    ) {
+        createPostLikeUsecase.execute(postId, memberId);
     }
 }

@@ -19,16 +19,24 @@ public class PostWriteService {
                 .build();
 
         return postRepository.save(post).getId();
-        /**
-         * from, to 회원 정보를 받아서 저장할텐데..
-         * from <-> to validate
-         */
     }
 
     @Transactional
-    public void likePost(Long postId){
-        var post = postRepository.findById(postId, false).orElseThrow();
+    public void likePostPessimistic(Long postId){
+        var post = postRepository.findById(postId, true).orElseThrow();
         post.increaseLikeCount();
         postRepository.save(post);
+    }
+
+    public void likePostOptimistic(Long postId) {
+        var post = postRepository.findById(postId, false).orElseThrow();
+        post.increaseLikeCount();
+        try {
+            postRepository.save(post);
+        }
+        catch (Exception e){
+            System.out.println("occure error");
+            likePostPessimistic(post.getId());
+        }
     }
 }

@@ -27,6 +27,8 @@ select * from Member;
 delete from Member where id>17;
 
 ALTER TABLE Post ADD COLUMN likeCount INT;
+ALTER TABLE Post ADD COLUMN version INT DEFAULT 0;
+
 
 #### search rows is "1,496,436"
 explain select createdDate, memberId, count(id) as count
@@ -207,3 +209,15 @@ create table Timeline
     createdAt datetime not null,
     constraint Timeline_id_uindex PRIMARY KEY (id)
 );
+
+create table PostLike
+(
+    id int auto_increment,
+    memberId int not null,
+    postId int not null,
+    createdAt datetime not null,
+    constraint PostLike_id_uindex
+    primary key (id)
+);
+
+select * from PostLike;

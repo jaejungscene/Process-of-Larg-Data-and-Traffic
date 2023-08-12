@@ -1,13 +1,12 @@
 package com.example.fastcampusmysql.domain.post.service;
 
-import com.example.fastcampusmysql.domain.member.repository.TimelineRepository;
+import com.example.fastcampusmysql.domain.post.repository.TimelineRepository;
 import com.example.fastcampusmysql.domain.post.entity.Timeline;
 import com.example.fastcampusmysql.util.CursorRequest;
 import com.example.fastcampusmysql.util.PageCursor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.security.DrbgParameters;
 import java.util.List;
 
 

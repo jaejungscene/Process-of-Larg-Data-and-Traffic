@@ -1,4 +1,4 @@
-package com.example.fastcampusmysql.domain.member.repository;
+package com.example.fastcampusmysql.domain.post.repository;
 
 import com.example.fastcampusmysql.domain.post.entity.Post;
 import com.example.fastcampusmysql.domain.post.entity.Timeline;

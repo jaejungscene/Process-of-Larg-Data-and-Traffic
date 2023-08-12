@@ -5,6 +5,7 @@ import com.example.fastcampusmysql.domain.post.dto.DailyPostCountRequest;
 import com.example.fastcampusmysql.domain.post.dto.PostCommand;
 import com.example.fastcampusmysql.domain.post.dto.PostDto;
 import com.example.fastcampusmysql.domain.post.entity.Post;
+import com.example.fastcampusmysql.domain.post.repository.PostLikeRepository;
 import com.example.fastcampusmysql.domain.post.repository.PostRepository;
 import com.example.fastcampusmysql.util.CursorRequest;
 import com.example.fastcampusmysql.util.PageCursor;
@@ -25,15 +26,17 @@ import java.util.OptionalLong;
 @Service
 public class PostReadService {
     final private PostRepository postRepository;
+    final private PostLikeRepository postLikeRepository;
 
-    public static PostDto toPostDto(Post post) {
-        return new PostDto(
-                post.getId(),
-                post.getMemberId(),
-                post.getContents(),
-                post.getCreatedDate(),
-                post.getCreatedAt()
-        );
+    private PostDto toPostDto(Post post) {
+        return PostDto.builder()
+                .id(post.getId())
+                .contents(post.getContents())
+                .createdAt(post.getCreatedAt())
+                .likeCount(
+                        postLikeRepository.count(post.getId())
+                )
+                .build();
     }
 
     private static long getNextKey(List<Post> posts) {
@@ -48,7 +51,7 @@ public class PostReadService {
     public List<PostDto> getAll() {
         return postRepository.findAllWithLimit()
                 .stream()
-                .map(PostReadService::toPostDto)
+                .map(this::toPostDto)
                 .toList();
     }
 
@@ -58,11 +61,17 @@ public class PostReadService {
     }
 
     @Transactional
+    public Post getPosts(Long postId){
+        return postRepository.findById(postId, false).orElseThrow();
+    }
+
+    @Transactional
     /**
      * for Offset Pagination
      */
-    public Page<Post> getPosts(Long memberId, Pageable pageable){
-        return postRepository.findAllByMemberIdForPagination(memberId, pageable);
+    public Page<PostDto> getPosts(Long memberId, Pageable pageable){
+        return postRepository.findAllByMemberIdForPagination(memberId, pageable)
+                .map(this::toPostDto);
     }
 
     @Transactional

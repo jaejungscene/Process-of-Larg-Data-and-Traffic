@@ -15,6 +15,7 @@
 | 2   | 1        |
 | 3   | 2        |
 | ... | ...      | 
+
 When we have the above tables,   
 we need `log(# Follow's records) + {(# Following of a member)*log(# Post's records)}` time complexity 
 to make a timeline of a particular member.  

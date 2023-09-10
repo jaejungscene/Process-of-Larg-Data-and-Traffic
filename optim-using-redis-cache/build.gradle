@@ -1,0 +1,53 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.0.6'
+	id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'jaejung'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-web')
+
+	// jdbc, hibernate
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+
+	// template engine
+	implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
+
+	// validation kit
+	implementation('org.springframework.boot:spring-boot-starter-validation')
+
+	// spring security
+	implementation('org.springframework.boot:spring-boot-starter-security')
+
+	//redis
+	implementation('org.springframework.boot:spring-boot-starter-data-redis:3.1.2')
+	implementation('org.springframework.session:spring-session-data-redis:3.1.1')
+
+	// swagger
+	implementation('io.springfox:springfox-boot-starter:3.0.0')
+
+	implementation('com.googlecode.json-simple:json-simple:1.1.1')
+	implementation('com.google.code.gson:gson:2.10.1')
+
+	annotationProcessor('org.projectlombok:lombok')
+
+    // developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	compileOnly('org.projectlombok:lombok')
+	runtimeOnly('mysql:mysql-connector-java:8.0.25')
+	// runtimeOnly('com.h2database:h2')
+
+	testImplementation('org.projectlombok:lombok')
+	testImplementation('org.springframework.boot:spring-boot-starter-test') //JUnit
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

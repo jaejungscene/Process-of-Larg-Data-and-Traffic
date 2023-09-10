@@ -11,22 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-record Rectang(
-        double length, double width
-){
-
-}
-
-@Getter
-@Builder
-class tempClass{
-    private String name;
-    private Long id;
-}
 
 public class TempTest {
     @Test
@@ -53,43 +42,21 @@ public class TempTest {
     }
 
     @Test
-    void recordClass_Test(){
-        System.out.println("---------------------");
-        Rectang temp = new Rectang(12, 24);
-        System.out.println(">>>>>>>>> " + temp);
-        System.out.println(temp.length());
-        System.out.println(temp.width());
-        System.out.println("---------------------");
-    }
-
-    @Test
-    void testLombok() {
-        tempClass A = tempClass.builder()
-                .name("hello")
-                .id(312L)
-                .build();
-        System.out.println("------------------");
-//        System.out.println(A);
-//        System.out.println(A.getId());
-//        System.out.println(A.getName());
-        System.out.println("------------------");
-    }
-
-    @Test
-    void test01() {
-        System.out.println(">>> " + tempClass.class);
-        var sql = String.format("SELECT * FROM %s WHERE id = :id", "hello world");
-        System.out.println(sql);
-    }
-    class InnerClass{
-
-    }
-    @Test
     void pageable() {
-        Pageable request = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC,"name"));
-        System.out.println(">>> "+request.getClass().getName());
-        System.out.println(">>> "+PageRequest.of(0, 4).getClass().getTypeName());
-        System.out.println(">>> "+new InnerClass().getClass().getName());
-
+        int temp;
+        int[] progresses = {93, 30, 55};
+        int[] speeds = {1, 30, 5};
+        for(int i=0; i<speeds.length; i++) {
+            temp = 100 - progresses[i];
+            System.out.println(temp / speeds[i]);
+            System.out.println(temp % speeds[i] != 0 ? 1 : 0);
+            System.out.println(temp / speeds[i] +
+                    temp % speeds[i] != 0 ? 1 : 0);
+            System.out.println("--------------");
+        }
+//        Pageable request = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC,"name"));
+//        System.out.println(">>> "+request.getClass().getName());
+//        System.out.println(">>> "+PageRequest.of(0, 4).getClass().getTypeName());
+//        System.out.println(">>> "+new InnerClass().getClass().getName());
     }
 }

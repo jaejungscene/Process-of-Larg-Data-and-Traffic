@@ -33,13 +33,13 @@ ALTER TABLE Post ADD COLUMN version INT DEFAULT 0;
 #### search rows is "1,496,436"
 explain select createdDate, memberId, count(id) as count
 from Post use index ()
-where memberId=4 and createdDate between '1900-01-01' and '2024-01-01'
-group by memberId, createdDate;
+where memberId=4 and createdDate between '1990-01-01' and '2024-01-01'
+group by memberId, createdDate limit 10;
 
 
 explain select createdDate, memberId, count(id) as count
 from POST
-where memberId=4 and createdDate between '1900-01-01' and '2024-01-01'
+where memberId=4 and createdDate between '1990-01-01' and '2024-01-01'
 group by memberId, createdDate;
 
 select count(id) as count
@@ -153,6 +153,10 @@ order by id DESC ;
 
 drop table Member;
 
+select * from Post
+where id=3600027;
+
+select * from PostLike;
 ##########################################################
 
 create table Member

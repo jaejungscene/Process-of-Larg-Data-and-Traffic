@@ -62,7 +62,7 @@ public class PostController {
      * - first: http://localhost:8080/posts/member/1/cursor?size=3
      * - others: http://localhost:8080/posts/member/1/cursor?key=3243000&size=3
      */
-    public PageCursor<Post> getPostsByCursor(
+    public PageCursor<PostDto> getPostsByCursor(
             @PathVariable Long memberId,
             CursorRequest cursorRequest
     ){
@@ -85,26 +85,18 @@ public class PostController {
         return getTimelinePostsUsecase.executeByTimeline(memberId, cursorRequest);
     }
 
-    @PostMapping("/{postId}/pessimistic-lock/like")
+    @PostMapping("/{postId}/pessimistic-lock/like/pull")
     public void likePostPes(Long postId) {
         postWriteService.likePostPessimistic(postId);
     }
 
-    @PostMapping("/{postId}/optimistic-lock/like")
+    @PostMapping("/{postId}/optimistic-lock/like/pull")
     public void likePostOpt(Long postId) {
         postWriteService.likePostOptimistic(postId);
     }
 
-    @PostMapping("/{postId}/like/v1")
+    @PostMapping("/{postId}/like/push")
     public void likePostV1(
-            @PathVariable Long postId,
-            @RequestParam Long memberId
-    ) {
-        createPostLikeUsecase.execute(postId, memberId);
-    }
-
-    @PostMapping("/{postId}/like/v2")
-    public void likePostV2(
             @PathVariable Long postId,
             @RequestParam Long memberId
     ) {

@@ -8,8 +8,11 @@ import java.time.LocalDateTime;
 @Builder
 public record PostDto(
         Long id,
+        Long memberId,
         String contents,
+        LocalDate createdDate,
         LocalDateTime createdAt,
-        Long likeCount
+        Long likeCount,
+        Long version
 ) {
 }

@@ -32,10 +32,13 @@ public class PostReadService {
         return PostDto.builder()
                 .id(post.getId())
                 .contents(post.getContents())
+                .createdDate(post.getCreatedDate())
                 .createdAt(post.getCreatedAt())
                 .likeCount(
                         postLikeRepository.count(post.getId())
                 )
+//                .likeCount(post.getLikeCount())
+                .version(post.getVersion())
                 .build();
     }
 
@@ -78,10 +81,13 @@ public class PostReadService {
     /**
      * for Cursor Pagination
      */
-    public PageCursor<Post> getPosts(Long memberId, CursorRequest cursorRequest) {
+    public PageCursor<PostDto> getPosts(Long memberId, CursorRequest cursorRequest) {
         List<Post> posts = findAllBy(memberId, cursorRequest);
         Long nextKey = getNextKey(posts);
-        return new PageCursor<>(cursorRequest.next(nextKey), posts);
+        return new PageCursor<>(
+                cursorRequest.next(nextKey),
+                posts.stream().map(this::toPostDto).toList()
+        );
     }
 
     @Transactional

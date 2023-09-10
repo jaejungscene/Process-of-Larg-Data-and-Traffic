@@ -1,23 +1,34 @@
 package com.example.fastcampusmysql.domain.post.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
 public class Post {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "memberId")
     private Long memberId;
+
     private String contents;
+
+    @Column(name = "createdDate")
     private LocalDate createdDate;
+
+    @Column(name = "createdAt")
     private LocalDateTime createdAt;
+
+    @Column(name = "likeCount")
     private Long likeCount;
+
     private Long version;
 
     @Builder
